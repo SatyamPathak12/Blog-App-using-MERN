@@ -1,9 +1,16 @@
 import React from 'react'
 import {BrowserRouter, Routes , Route} from "react-router-dom"
+import Home from './pages/Home'
+import About from './pages/About'
+import SignIn from './pages/Signin'
+import Dashboard from './pages/Dashboard'
+import SignUp from './pages/Signup'
+import Header from './components/Header'
 
 export default function App() {
   return (
     <BrowserRouter>
+    <Header/>
     <Routes>
       <Route path="/" element={<h1>Home</h1>}></Route>
       <Route path="/about" element={<h1>About</h1>}></Route>
