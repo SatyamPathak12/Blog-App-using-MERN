@@ -1,40 +1,41 @@
-import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import userRoutes from "./routes/user.route.js";
-import authRoutes from "./routes/auth.route.js"
-
-
+import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import cors from 'cors'; 
+import userRoutes from './routes/user.route.js';
+import authRoutes from './routes/auth.route.js';
 
 dotenv.config();
-mongoose.connect(process.env.MONGO)
-.then(()=>{
+
+mongoose.connect(process.env.MONGO, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => {
     console.log("MongoDB is connected");
-}).catch(err =>{
+})
+.catch(err => {
     console.log(err);
-})
+});
 
+const app = express();
 
-
-const app= express();
-
-app.use(express.json());  
-app.listen(3000, ()=>{
-    console.log("Server is running on port 3000");
-})
+app.use(cors());  
+app.use(express.json());
 
 app.use('/api/user', userRoutes);
-app.use('/api/auth',authRoutes);
+app.use('/api/auth', authRoutes);
 
-
-// midlleware
-app.use((err, req, res, next)=>{
+app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || "Something went wrong";
     res.status(statusCode).json({
         success: false,
         statusCode,
-        message
+        message,
     });
 });
 
+app.listen(3000, () => {
+    console.log("Server is running on port 3000");
+});
