@@ -20,54 +20,57 @@ export default function Signup() {
       return setError('Please fill out all fields');
     }
 
-  
-
     try {
-      setLoading(true); 
+      setLoading(true);
       setError(null);
 
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       const data = await res.json();
 
-      if (data.success===false) {
+      if (data.success === false) {
         setError(data.message || 'Something went wrong');
-      } 
-      setLoading(false)
-      if(res.ok){
+      }
+      setLoading(false);
+      if (res.ok) {
         navigate('/signin');
       }
     } catch (error) {
       setError(error.message);
-      setLoading(false); 
-    } 
+      setLoading(false);
+    }
   };
 
   return (
-    <div className='min-h-screen mt-20'>
-      <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5'>
+    <div className='min-h-screen mt-20 bg-gray-50'>
+      <div className='flex p-6 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-8'>
         {/* Left side */}
         <div className='flex-1'>
-          <Link to="/" className='font-bold dark:text-white text-4xl'>
-            <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>Blog</span>
+          <Link to="/" className='font-bold dark:text-gray-800 text-4xl'>
+            <span className='px-2 py-1 bg-gradient-to-r from-teal-400 via-blue-500 to-purple-600 rounded-lg text-white'>
+              Blog
+            </span>
             App
           </Link>
-          <p className='text-sm mt-5'>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi perspiciatis provident molestias! Quam nulla perferendis iste temporibus ab dolor quod reprehenderit, dolore voluptatem! Earum doloremque harum temporibus ab beatae reiciendis!
+          <p className='text-sm mt-5 text-gray-700'>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi
+            perspiciatis provident molestias! Quam nulla perferendis iste
+            temporibus ab dolor quod reprehenderit, dolore voluptatem! Earum
+            doloremque harum temporibus ab beatae reiciendis!
           </p>
         </div>
 
         {/* Right side */}
-        <div className='flex-1'>
+        <div className='flex-1 bg-white p-6 rounded-lg shadow-md'>
           <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
             <div>
-              <Label value='Your username'/>
+              <Label value='Your username' />
               <TextInput
                 type='text'
                 placeholder='Username'
@@ -76,7 +79,7 @@ export default function Signup() {
               />
             </div>
             <div>
-              <Label value='Your email'/>
+              <Label value='Your email' />
               <TextInput
                 type='email'
                 placeholder='name@gmail.com'
@@ -85,7 +88,7 @@ export default function Signup() {
               />
             </div>
             <div>
-              <Label value='Your password'/>
+              <Label value='Your password' />
               <TextInput
                 type='password'
                 placeholder='Password'
@@ -93,13 +96,19 @@ export default function Signup() {
                 onChange={handleChange}
               />
             </div>
-            <Button gradientDuoTone='purpleToPink' type='submit' disabled={loading}>
+            <Button
+              gradientDuoTone='cyanToBlue'
+              type='submit'
+              disabled={loading}
+            >
               {loading ? (
                 <>
-                <Spinner size='sm'/>
-                <span>Loding...</span>
+                  <Spinner size='sm' />
+                  <span>Loading...</span>
                 </>
-              ) : 'Sign Up'}
+              ) : (
+                'Sign Up'
+              )}
             </Button>
           </form>
           <div className='flex gap-2 text-sm mt-5'>
@@ -118,4 +127,3 @@ export default function Signup() {
     </div>
   );
 }
-
