@@ -1,26 +1,32 @@
-import React from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import About from './pages/About'
-import Dashboard from './pages/Dashboard'
-import SignUp from './pages/Signup'
-import Header from './components/Header'
-import FooterComponent from './components/Footer'
-import SignIn from './pages/Signin'
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import About from './pages/About';
+import Dashboard from './pages/Dashboard';
+import SignUp from './pages/Signup';
+import Header from './components/Header';
+import FooterComponent from './components/Footer';
+import SignIn from './pages/Signin';
+import PrivateRoute from './components/PrivateRoute';
 
 export default function App() {
   return (
     <BrowserRouter>
       <Header />
       <Routes>
-        <Route path="/" element={<h1>Home</h1>}></Route>
-        <Route path="/about" element={<h1>About</h1>}></Route>
-        <Route path="/signin" element={<SignIn />}></Route>
-        <Route path="/signup" element={<SignUp />}></Route>
-        <Route path="/projects" element={<h1>Projects</h1>}></Route>
-        <Route path="/dashboard" element={<h1>Dashboard</h1>}></Route>
+        <Route path="/" element={<h1>Home</h1>} />
+        <Route path="/about" element={<h1>About</h1>} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        
+        {/* Protecting the Dashboard route */}
+        <Route element={<PrivateRoute />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+
+        <Route path="/projects" element={<h1>Projects</h1>} />
       </Routes>
-      <FooterComponent/>
+      <FooterComponent />
     </BrowserRouter>
-  )
+  );
 }
