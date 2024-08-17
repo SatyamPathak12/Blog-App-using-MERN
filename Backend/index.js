@@ -4,6 +4,10 @@ import dotenv from 'dotenv';
 import cors from 'cors'; 
 import userRoutes from './routes/user.route.js';
 import authRoutes from './routes/auth.route.js';
+import cookieParser from 'cookie-parser';
+
+
+
 dotenv.config();
 
 
@@ -36,7 +40,7 @@ app.use((err, req, res, next) => {
         message,
     });
 });
-
+app.use(cookieParser());
 app.listen(3000, () => {
     console.log("Server is running on port 3000");
 });
