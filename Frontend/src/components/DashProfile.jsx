@@ -12,15 +12,23 @@ export default function DashProfile() {
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
+ 
   const filePickerRef = useRef();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        setImageFileUploadError('File size exceeds 2MB.');
+        setImageFile(null);
+        setImageFileUrl(null);
+        return;
+      }
       setImageFile(file);
       setImageFileUrl(URL.createObjectURL(file));
     }
   };
+  
 
   useEffect(() => {
     if (imageFile) {
@@ -42,7 +50,7 @@ export default function DashProfile() {
         setImageFileUploadProgress(progress.toFixed(0));
       },
       (error) => {
-        setImageFileUploadError('Upload failed. Please ensure the file is less than 2MB and is an image.');
+        setImageFileUploadError('Upload failed. Please ensure that the uploaded file is an image.');
         setImageFileUploadProgress(null)
         setImageFile(null)
         setImageFileUrl(null)
@@ -64,7 +72,7 @@ export default function DashProfile() {
   return (
     <div className='max-w-lg mx-auto p-3 w-full'>
       <h1 className='my-7 text-center font-semibold text-3xl'>Profile</h1>
-      <form className='flex flex-col gap-4'>
+      <form  className='flex flex-col gap-4'>
         {/* Image Upload */}
         <input 
           type='file' 
@@ -109,7 +117,7 @@ export default function DashProfile() {
         <TextInput type='text' id='username' placeholder='Username' defaultValue={currentUser.username} />
         <TextInput type='email' id='email' placeholder='Email' defaultValue={currentUser.email} />
         <TextInput type='password' id='password' placeholder='Password' />
-        <Button type='submit' gradientDuoTone='purpleToBlue' outline>
+        <Button type='submit' gradientDuoTone='purpleToBlue' outline >
           Update
         </Button>
       </form>
