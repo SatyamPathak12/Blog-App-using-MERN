@@ -17,7 +17,6 @@ export const updateUser = async (req, res, next) => {
         if (req.user.id.toString() !== req.params.userId.toString()) {
             return next(errorHandler(403, 'You are not allowed to update this user'));
         }
-        
 
         // Handle password update
         if (req.body.password) {
@@ -49,7 +48,7 @@ export const updateUser = async (req, res, next) => {
                 username: req.body.username,
                 email: req.body.email,
                 password: req.body.password,
-                profilePicture: req.body.profilePicture, // Fixed to use profilePicture not password
+                profilePicture: req.body.profilePicture,
             }
         }, { new: true });
 
@@ -64,18 +63,21 @@ export const updateUser = async (req, res, next) => {
     }
 };
 
-
-export const deleteUser = async (req, res, next)=>{
-    if(req.user.id !== req.params.userId){
-        return next(errorHandler(403, 'You do not have permission to delete this user'))
-    }
-
+// deleteUser function in the controller
+export const deleteUser = async (req, res, next) => {
     try {
-        await User.findByIdAndDelete(req.params.userId);
-        res.status(200).json({ message: 'User deleted successfully' });
+        // Check if the user is authorized to delete this account
+        if (req.user.id.toString() !== req.params.userId.toString()) {
+            return next(errorHandler(403, 'You do not have permission to delete this user'));
+        }
 
+        // Delete the user from the database
+        await User.findByIdAndDelete(req.params.userId);
         
+        res.status(200).json({ message: 'User deleted successfully' });
     } catch (error) {
-        next(error);  
+        next(error);
     }
-}
+};
+
+

@@ -13,7 +13,7 @@ export const verifyToken = (req, res, next) => {
 
         // Ensure req.user.id is set correctly
         req.user = {
-            id: user.userId, // Or use user._id if that's what you store in your token
+            id: user.userId, 
         };
 
         next();
