@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 import { errorHandler } from "./error.js";
 
 export const verifyToken = (req, res, next) => {
@@ -6,14 +6,16 @@ export const verifyToken = (req, res, next) => {
     if (!token) {
         return next(errorHandler(401, 'Unauthorized'));
     }
+
     jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
         if (err) {
             return next(errorHandler(401, 'Unauthorized'));
         }
 
-        // Ensure req.user.id is set correctly
+       
         req.user = {
-            id: user.userId, 
+            id: user.userId,
+            isAdmin: user.isAdmin,  
         };
 
         next();

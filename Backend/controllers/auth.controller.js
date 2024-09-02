@@ -3,13 +3,13 @@ import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
 
+
 export const signup = async (req, res, next) => {
     const { username, email, password } = req.body;
     
     if (!username || !email || !password || username === '' || email === '' || password === '') {
-        return next(errorHandler(400, 'All fields are required'));  // Ensure `errorHandler` is correctly implemented
+        return next(errorHandler(400, 'All fields are required')); 
     }
-    
     const hashedPassword = bcryptjs.hashSync(password, 10);
 
     const newUser = new User({
@@ -44,7 +44,7 @@ export const signin = async (req, res, next) => {
             return next(errorHandler(400, 'Invalid email or password'));
         }
 
-        const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id, isAdmin : user.isAdmin }, process.env.SECRET_KEY, { expiresIn: '1h' });
         const{password : pass ,...rest}= user._doc;
 
         res.status(200).cookie('access_token', token, {
@@ -61,7 +61,7 @@ export const google= async(req, res, next)=>{
     try {
         const user = await User.findOne({ email });
         if (user) {
-            const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY);
+            const token = jwt.sign({ userId: user._id, isAdmin : user.isAdmin }, process.env.SECRET_KEY);
             const {password, ...rest}= user._doc;
             res.status(200).cookie('access_token', token, {
                 httpOnly: true,
@@ -78,7 +78,7 @@ export const google= async(req, res, next)=>{
 
                     });
                     await newUser.save();
-                    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+                    const token = jwt.sign({ userId: user._id, isAdmin: newUser.isAdmin  }, process.env.SECRET_KEY, { expiresIn: '1h' });
 
                     const {password, ...rest}= newUser._doc;
                     res.status(200).cookie('access_token', token, {
