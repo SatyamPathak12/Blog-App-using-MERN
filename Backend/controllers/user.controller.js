@@ -63,15 +63,13 @@ export const updateUser = async (req, res, next) => {
     }
 };
 
-// deleteUser function in the controller
 export const deleteUser = async (req, res, next) => {
     try {
-        // Check if the user is authorized to delete this account
-        if (req.user.id.toString() !== req.params.userId.toString()) {
+      
+        if (!req.user.isAdmin && req.user.id.toString() !== req.params.userId.toString()) {
             return next(errorHandler(403, 'You do not have permission to delete this user'));
         }
 
-        // Delete the user from the database
         await User.findByIdAndDelete(req.params.userId);
         
         res.status(200).json({ message: 'User deleted successfully' });
@@ -93,6 +91,50 @@ export const signout= (req, res, next)=>{
     }
 }
 
+export const getUsers = async (req, res, next) => {
+    if (!req.user.isAdmin) {
+      return next(errorHandler(403, 'You do not have permission to view all users'));
+    }
+    
+    try {
+      const startIndex = parseInt(req.query.startIndex) || 0;
+      const limit = parseInt(req.query.limit) || 9; // Changed endIndex to limit
+      const sortDirection = req.query.sort === 'asc' ? 1 : -1;
+  
+      
+      const users = await User.find()
+        .sort({ createdAt: sortDirection })
+        .skip(startIndex)
+        .limit(limit);
+  
+     
+      const usersWithoutPassword = users.map((user) => {
+        const { password, ...rest } = user._doc;
+        return rest;
+      });
+  
+      
+      const totalUsers = await User.countDocuments();
+  
+     
+      const now = new Date();
+      const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+      const lastMonthUsers = await User.countDocuments({
+        createdAt: { $gte: oneMonthAgo },
+      });
+  
+      
+      res.status(200).json({
+        users: usersWithoutPassword,
+        totalUsers,
+        lastMonthUsers
+      });
+  
+    } catch (error) {
+      next(error);
+    }
+  };
+  
 
  
 
