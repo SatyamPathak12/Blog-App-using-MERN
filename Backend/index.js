@@ -6,8 +6,8 @@ import userRoutes from './routes/user.route.js';
 import authRoutes from './routes/auth.route.js';
 import postRoutes from './routes/post.route.js';
 import commentRoutes from './routes/comment.route.js';
-
 import cookieParser from 'cookie-parser';
+import path from 'path'
 
 
 
@@ -27,6 +27,8 @@ mongoose.connect(process.env.MONGO, {
     console.log(err);
 });
 
+const _dirname= path.resolve();
+
 const app = express();
 
 app.use(cors());  
@@ -40,6 +42,11 @@ app.use('/api/auth', authRoutes);
 app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
 
+app.use(express.static(path.join(_dirname, '/client/dist')));
+
+app.get('*',(req, res)=>{
+    res.sendFile(path.join(_dirname, 'client','dist','index.html'));
+});
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || "Something went wrong";
