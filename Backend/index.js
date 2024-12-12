@@ -42,10 +42,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
 
-app.use(express.static(path.join(_dirname, '/client/dist')));
+app.use(express.static(path.join(_dirname, '/Frontend/dist')));
 
 app.get('*',(req, res)=>{
-    res.sendFile(path.join(_dirname, 'client','dist','index.html'));
+    res.sendFile(path.join(_dirname, 'Frontend','dist','index.html'));
 });
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
